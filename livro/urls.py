@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'livro'
 urlpatterns = [
-    path('cadastrar/',views.cadastrar),
+    path('inicio/',views.inicio, name="inicio"),
 ]
 
 
