@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block 'conteudo' %}
+<br>
+<div class="container">
+    <form action="#">
+        {% csrf_token %}
+        <label>Nome do livro: </label>
+        <input type="text" class="form-control" value="{{livro.nome}}">
+        <label>Autor: </label>
+        <input style="width: 40%;" type="text" class="form-control" value="{{livro.autor}}">
+        <label>Co-Autor: </label>
+        <input style="width: 40%;" type="text" class="form-control" value="{{livro.co_autor}}">
+        <label>Data: </label>
+        <input style="width: 40%;" type="text" class="form-control" value="{{livro.data_cadastro}}">
+        <br>
+        <label>Emprestado: &nbsp; &nbsp; </label>
+        {% if livro.emprestado %}
+        <input style="transform: scale(2.0);" checked type="checkbox" name="emprestado">
+        {% else %}
+        <input style="transform: scale(2.0);" type="checkbox" name="emprestado">
+        {% endif %}
+        <br>
+        <label>Sinopse: </label>
+        <input style="width: 100%;  height: 100%;" type="text" class="form-control" value="{{livro.sinopse}}">
+        <!--<textarea name="sinopse" id="" cols="66" rows="5">{{livro.sinopse}}</textarea>-->
+
+        <label>Categoria:</label>
+        <select style="width: 20%;" class="form-control" name="categoria_id">
+            {% for i in categorias%}
+
+            {% if livro.categoria.nome == i.nome %}
+            <option value="{{i.id}}" selected>{{i}}</option>
+            {% else %}
+
+            <option value="{{i.id}}">{{i}}</option>
+            {% endif%}
+            {% endfor %}
+        </select>
+        <br>
+        <input type="submit" class="btn btn-success btn-lg" value="Salvar">
+    </form>
+
+</div>
+
+
+{% endblock 'conteudo' %}
