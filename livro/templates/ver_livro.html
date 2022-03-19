@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load filtros %}
 
 {% block 'conteudo' %}
 <a style="text-decoration: none;" href="{% url 'livro:editar_livro' livro.id%}">&nbsp; &nbsp;<svg
@@ -48,7 +49,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for e  in emprestimos  %}
+            {% for e in emprestimos %}
             <tr>
                 {% if e.nome_emprestado_anonimo == None %}
                     <th scope="row">{{e.nome_emprestado}}</th>
@@ -57,7 +58,7 @@
                 {% endif %}
                 <td>{{e.data_emprestimo}}</td>
                 <td>{{e.data_devolucao}}</td>
-                <td></td>
+                <td>{{e.data_devolucao|mostra_duracao:e.data_emprestimo}} dias</td>
             </tr>
             {% endfor %}
         </tbody>

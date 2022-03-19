@@ -1,26 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <!-- Meta tags Obrigatórias -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {% block 'head' %}{% endblock 'head' %}
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"  crossorigin="anonymous">
 
-    <title>{% block 'titulo' %}{% endblock 'titulo' %}</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'livro:inicio'%}">Biblioteca</a>
-      </nav>
+<head>
+  <!-- Meta tags Obrigatórias -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% block 'head' %}{% endblock 'head' %}
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    crossorigin="anonymous">
 
-    {% block 'conteudo' %}{% endblock 'conteudo' %}
+  <title>{% block 'titulo' %}{% endblock 'titulo' %}</title>
+</head>
 
-    <!-- JavaScript (Opcional) -->
-    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
-    
-  </body>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'livro:inicio'%}">Biblioteca</a>
+    {% if usuario_logado %}
+    <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Cadastrar Livro
+      </button>
+
+      <a href="{% url 'usuarios:sair' %}" class="btn btn-danger">Sair</a>
+    {% endif %}
+  </nav>
+
+  {% block 'conteudo' %}{% endblock 'conteudo' %}
+
+  <!-- JavaScript (Opcional) -->
+  <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% if usuario_logado %}
+  <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Cadastrar Livro</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'livro:cadastrar_livro'%}" method="POST">
+                {% csrf_token %}
+                <table>{{formulario.as_table}}</table>
+                <input type="submit" class="btn btn-success" value="Cadastrar">
+              </form>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+  {% endif %}
+
+</body>
+
 </html>
