@@ -2,6 +2,13 @@
 
 {% block 'conteudo' %}
 <br>
+{% if status_categoria == '1' %}
+<div class="alert alert-success" role="alert">
+    Categoria cadastrada com sucesso!
+</div>
+{% endif %}
+
+
 <div class="container">
     <div class="row">
         {% for livro in livros %}

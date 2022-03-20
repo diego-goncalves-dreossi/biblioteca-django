@@ -22,7 +22,7 @@
     {% if usuario_logado %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Cadastrar Livro
+      Cadastrar
     </button>
 
     <a href="{% url 'usuarios:sair' %}" class="btn btn-danger">Sair</a>
@@ -65,7 +65,12 @@
           </div>
 
           <div style="display: none;" id="categoria">
-            Categoria
+            <form action="{% url 'livro:cadastrar_categoria'%}" method="POST">
+              {% csrf_token %}
+              <table>{{form_categoria.as_table}}</table>
+              <input type="hidden" name="usuario" value="{{usuario_logado}}">
+              <input class="btn btn-success" type="submit" value="Cadastrar">
+            </form>
           </div>
 
           <div style="display: none;" id="emprestimo">Emprestimos</div>

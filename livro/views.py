@@ -1,8 +1,9 @@
+from ast import If
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Categoria, Emprestimo, Livro
 from usuarios.models import Usuario
-from .forms import CadastroLivro
+from .forms import CadastroLivro,CadastroCategoria
 # Create your views here.
 
 def inicio(request):
@@ -11,12 +12,18 @@ def inicio(request):
         usuario = Usuario.objects.get(id=request.session['usuario'])
         # Retorna o objeto com o id enviado para a página
         livros = Livro.objects.filter(usuario = usuario)
+        # Formulário do livro
         formulario = CadastroLivro()
         # Define valor inicial do campo
         formulario.fields['usuario'].initial = request.session.get('usuario')
         # Retorna as categorias do usuario no formulário
         formulario.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)
-        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario})
+
+        # Formulário da categoria
+        fc = CadastroCategoria()
+        status_categoria = request.GET.get('cadastro_categoria')
+
+        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria})
     else:
         return redirect('/login/?status=2')
 
@@ -33,7 +40,11 @@ def ver_livro(request, id):
             formulario.fields['usuario'].initial = request.session.get('usuario')
             # Retorna as categorias do usuario no formulário
             formulario.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)
-            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario})
+
+            # Formulário da categoria
+            fc = CadastroCategoria()
+
+            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -55,7 +66,11 @@ def editar_livro(request, id):
             # Retorna as categorias do usuario no formulário
             formulario.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)
             #
-            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario})
+            # Formulário da categoria
+            fc = CadastroCategoria()
+
+
+            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -76,3 +91,20 @@ def cadastrar_livro(request):
 def excluir_livro(request, id):
     livro = Livro.objects.get(id=id).delete()
     return redirect('/livro/inicio')
+
+def cadastrar_categoria(request):
+    form = CadastroCategoria(request.POST)
+    nome = form.data['nome']
+    descricao = form.data['descricao']
+    usuario = request.POST.get('usuario')
+
+    # Salvar no banco de dados
+    # Esses int servem para garantir que dados sejam do mesmo tipo
+    if int(usuario) == int(request.session.get('usuario')):
+        user = Usuario.objects.get(id = usuario)
+        categoria = Categoria(nome = nome,descricao = descricao,usuario = user)
+        categoria.save()
+        return redirect('/livro/inicio?cadastro_categoria=1')
+    else:
+        return HttpResponse('Erro ao salvar categoria no bd')
+    
