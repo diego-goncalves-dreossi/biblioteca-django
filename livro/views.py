@@ -69,7 +69,10 @@ def cadastrar_livro(request):
 
         if formulario.is_valid:
             formulario.save()
-            return HttpResponse("Livro salvo com sucesso!")
-
+            return redirect('/livro/inicio')
         else:
             return HttpResponse('Dados Invalidos')
+
+def excluir_livro(request, id):
+    livro = Livro.objects.get(id=id).delete()
+    return redirect('/livro/inicio')
