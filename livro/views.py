@@ -63,4 +63,13 @@ def editar_livro(request, id):
 
 
 def cadastrar_livro(request):
-    return HttpResponse(request)
+    # Evita que a url seja acessada manualmente
+    if request.method == 'POST':
+        formulario = CadastroLivro(request.POST)
+
+        if formulario.is_valid:
+            formulario.save()
+            return HttpResponse("Livro salvo com sucesso!")
+
+        else:
+            return HttpResponse('Dados Invalidos')
