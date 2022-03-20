@@ -55,7 +55,7 @@ def editar_livro(request, id):
             # Retorna as categorias do usuario no formulário
             formulario.fields['categoria'].queryset = Categoria.objects.filter(usuario = usuario)
             #
-            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario')})
+            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario})
         else:
             return HttpResponse('Este livro não é seu')
     else:
