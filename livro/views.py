@@ -23,7 +23,10 @@ def inicio(request):
         fc = CadastroCategoria()
         status_categoria = request.GET.get('cadastro_categoria')
 
-        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria})
+        # Para os emprestimos
+        e_usuarios = Usuario.objects.all()
+        # Vai usar o livros = Livro.objects.filter(usuario = usuario)
+        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios})
     else:
         return redirect('/login/?status=2')
 
@@ -44,7 +47,11 @@ def ver_livro(request, id):
             # Formulário da categoria
             fc = CadastroCategoria()
 
-            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc})
+            # Para os emprestimos
+            e_usuarios = Usuario.objects.all()
+            livros = Livro.objects.filter(usuario = usuario)
+
+            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -69,8 +76,12 @@ def editar_livro(request, id):
             # Formulário da categoria
             fc = CadastroCategoria()
 
+            # Para os emprestimos
+            e_usuarios = Usuario.objects.all()
+            livros = Livro.objects.filter(usuario = usuario)
 
-            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc})
+
+            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -107,4 +118,7 @@ def cadastrar_categoria(request):
         return redirect('/livro/inicio?cadastro_categoria=1')
     else:
         return HttpResponse('Erro ao salvar categoria no bd')
+
+def cadastrar_emprestimo(request):
+    return HttpResponse('Teste cadastrar_emprestimo')
     

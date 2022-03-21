@@ -73,7 +73,31 @@
             </form>
           </div>
 
-          <div style="display: none;" id="emprestimo">Emprestimos</div>
+          <div style="display: none;" id="emprestimo">
+            <form action="{% url 'livro:cadastrar_emprestimo'%}" method="post">
+              {% csrf_token %}
+                <label>Emprestar para:</label>
+                <select class="form-control" name="nome_emprestado">
+                  {% for usu in e_usuarios %}
+                    <option value="{{usu.id}}">{{usu.nome}}</option>
+                  {% endfor %}
+                </select>
+                <br>
+                <label>ou</label>
+                <input type="text" placeholder="Digite o nome para quem emprestou" name="nome_emprestado_anonimo" class="form-control">
+                <br>
+                <label>Livro a emprestar:</label>
+                <select class="form-control" name="livro_emprestimo">
+                  {% for lvr in livros %}
+                    <option value="{{lvr.id}}">{{lvr.nome}}</option>
+                  {% endfor %}
+                </select>
+
+              <input type="submit" value="Emprestar">
+
+
+            </form>
+          </div>
 
 
 
@@ -85,12 +109,12 @@
   {% endif %}
 
   <script>
-    function mostrar_form(f){
+    function mostrar_form(f) {
       categoria = document.getElementById('categoria')
       livro = document.getElementById('livro')
       emprestimo = document.getElementById('emprestimo')
 
-      if (f == 'Categoria'){
+      if (f == 'Categoria') {
         //console.log(f)
         //Habilitando
         categoria.style.display = 'block'
@@ -98,7 +122,7 @@
         livro.style.display = 'none'
         emprestimo.style.display = 'none'
       }
-      if (f == 'Livro'){
+      if (f == 'Livro') {
         //console.log(f)
         //Habilitando
         livro.style.display = 'block'
@@ -106,7 +130,7 @@
         categoria.style.display = 'none'
         emprestimo.style.display = 'none'
       }
-      if (f == 'Emprestimo'){
+      if (f == 'Emprestimo') {
         //console.log(f)
         //Habilitando
         emprestimo.style.display = 'block'
