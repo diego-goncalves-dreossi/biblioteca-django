@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block 'conteudo' %}
+
+    {% for emprestimo in emprestimos  %}
+        <label>Livro</label>
+        {{emprestimo.livro}}
+        <br>
+        <label>Devolução: </label>
+        {% if emprestimo.data_devolucao  %}
+            {{emprestimo.data_devolucao}}
+        {% else %}
+            Ainda não foi devolvido
+        {% endif %}
+        <br>
+        <label>Empréstimo: </label>
+        {{emprestimo.data_emprestimo}}
+        
+        <hr>
+
+    {% endfor %}
+
+
+{% endblock 'conteudo' %}

@@ -204,8 +204,8 @@ def alterar_livro(request):
     autor = request.POST.get('autor')
     co_autor = request.POST.get('co_autor')
     sinopse = request.POST.get('sinopse')
-    print(livro_id,nome_livro,autor,co_autor,sinopse)
-
+    categoria_id = request.POST.get('categoria_id')
+    categoria = Categoria.objects.get(id = categoria_id)
     livro = Livro.objects.get(id = livro_id)
     
     # Evita a falha de segurança de alguém poder mexer no sistema pelo inspecionar
@@ -214,7 +214,13 @@ def alterar_livro(request):
         livro.autor = autor
         livro.co_autor = co_autor
         livro.sinopse = sinopse
+        livro.categoria = categoria
         livro.save()
         return redirect(f'/livro/livro_info/{livro_id}')
     else:
         return redirect('/sair')
+
+def seus_emprestimos(request):
+    usuario = Usuario.objects.get(id = request.session['usuario'])
+    emprestimos = Emprestimo.objects.filter(nome_emprestado = usuario)
+    return render(request,'seus_emprestimos.html', {'usuario_logado':request.session.get('usuario'),'emprestimos':emprestimos})
