@@ -30,7 +30,14 @@ def inicio(request):
         # Livro disponíveis para emprestar
         e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
 
-        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros})
+        # Livros já emprestados
+        d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
+      
+        print(d_livros)
+
+        total_livros = livros.count()
+
+        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros,'total_livros':total_livros})
     else:
         return redirect('/login/?status=2')
 
@@ -96,7 +103,6 @@ def editar_livro(request, id):
     else:
         return redirect('/login/?status=2')
 
-
 def cadastrar_livro(request):
     # Evita que a url seja acessada manualmente
     if request.method == 'POST':
@@ -158,4 +164,4 @@ def cadastrar_emprestimo(request):
         return HttpResponse('Emprestimo realizado com sucesso')
     except:
         return HttpResponse('Erro no cadastrar_emprestimo')
-    
+

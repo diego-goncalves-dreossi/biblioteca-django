@@ -20,12 +20,22 @@
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="{% url 'livro:inicio'%}">Biblioteca</a>
     {% if usuario_logado %}
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Cadastrar
-    </button>
+    <div class="dropdown">
+      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Menu
+      </a>
 
-    <a href="{% url 'usuarios:sair' %}" class="btn btn-danger">Sair</a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+        <button type="button"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary dropdown-item" >Cadastrar</button>
+        <a href="{% url 'usuarios:sair' %}" class="btn btn-danger dropdown-item">Sair</a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" href="#">{{total_livros}} livros.</div>
+      </div>
+    </div>
+    <!-- Button trigger modal -->
+    
+
+    
     {% endif %}
   </nav>
 
@@ -53,6 +63,7 @@
           <button class="btn btn-info" onclick="mostrar_form('Categoria')">Categoria</button>
           <button class="btn btn-warning" onclick="mostrar_form('Livro')">Livro</button>
           <button class="btn btn-primary" onclick="mostrar_form('Emprestimo')">Empréstimo</button>
+          <button class="btn btn-danger" onclick="mostrar_form('Devolucao')">Devolução</button>
           <br>
           <br>
           <!-- Formulários de cadastro de livro, categoria e emprestimos -->
@@ -101,7 +112,11 @@
             </form>
           </div>
 
-
+          <div style="display: none;" id="devolucao">
+            <select class="form-control" id="">
+              <option>Teste</option>
+            </select>
+          </div>
 
         </div>
 
@@ -115,6 +130,7 @@
       categoria = document.getElementById('categoria')
       livro = document.getElementById('livro')
       emprestimo = document.getElementById('emprestimo')
+      devolucao = document.getElementById('devolucao')
 
       if (f == 'Categoria') {
         //console.log(f)
@@ -123,22 +139,30 @@
         //Desabilitando
         livro.style.display = 'none'
         emprestimo.style.display = 'none'
-      }
-      if (f == 'Livro') {
+        devolucao.style.display = 'none'
+      } else if (f == 'Livro') {
         //console.log(f)
         //Habilitando
         livro.style.display = 'block'
         //Desabilitando
         categoria.style.display = 'none'
         emprestimo.style.display = 'none'
-      }
-      if (f == 'Emprestimo') {
+        devolucao.style.display = 'none'
+      } else if (f == 'Emprestimo') {
         //console.log(f)
         //Habilitando
         emprestimo.style.display = 'block'
         //Desabilitando
         livro.style.display = 'none'
         categoria.style.display = 'none'
+        devolucao.style.display = 'none'
+      } else if(f == 'Devolucao'){
+        //Habilitando
+        devolucao.style.display = 'block'
+        //Desabilitando
+        categoria.style.display = 'none'
+        emprestimo.style.display = 'none'
+        livro.style.display = 'none'
       }
     }
 
