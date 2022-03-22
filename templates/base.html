@@ -74,26 +74,28 @@
           </div>
 
           <div style="display: none;" id="emprestimo">
-            <form action="{% url 'livro:cadastrar_emprestimo'%}" method="post">
+            <button onclick="exibe_input_emprestado('Novo')" class="btn btn-secondary">Usuário Novo</button>
+            <button onclick="exibe_input_emprestado('Existente')" class="btn btn-dark">Usuário Existente</button>
+            <form id="form-emprestimo" action="{% url 'livro:cadastrar_emprestimo'%}" method="post">
               {% csrf_token %}
                 <label>Emprestar para:</label>
-                <select class="form-control" name="nome_emprestado">
+                <select style="display: none;" id="nome_emprestado" class="form-control" name="nome_emprestado">
                   {% for usu in e_usuarios %}
                     <option value="{{usu.id}}">{{usu.nome}}</option>
                   {% endfor %}
                 </select>
-                <br>
-                <label>ou</label>
-                <input type="text" placeholder="Digite o nome para quem emprestou" name="nome_emprestado_anonimo" class="form-control">
+               
+               
+                <input style="display: none;" id="nome_emprestado_anonimo" type="text" placeholder="Digite o nome para quem emprestou" name="nome_emprestado_anonimo" class="form-control">
                 <br>
                 <label>Livro a emprestar:</label>
                 <select class="form-control" name="livro_emprestimo">
-                  {% for lvr in livros %}
+                  {% for lvr in e_livros %}
                     <option value="{{lvr.id}}">{{lvr.nome}}</option>
                   {% endfor %}
                 </select>
-
-              <input type="submit" value="Emprestar">
+                <br>
+              <input type="submit" value="Emprestar" class="btn btn-success">
 
 
             </form>
@@ -140,6 +142,22 @@
       }
     }
 
+    function exibe_input_emprestado(tu){
+      //tu: tipo de usuário
+      if(tu == 'Novo'){
+        //Faz aparecer o input de adicionar usuário não cadastrado
+        document.getElementById('nome_emprestado').style.display = 'none'
+        document.getElementById('nome_emprestado_anonimo').style.display = 'block'
+        
+      }else{
+        //Faz aparecer o select de usuário já cadastrados no sistema
+        document.getElementById('nome_emprestado').style.display = 'block'
+        document.getElementById('nome_emprestado_anonimo').style.display = 'none'
+       
+
+      }
+
+    }
   </script>
 
 </body>

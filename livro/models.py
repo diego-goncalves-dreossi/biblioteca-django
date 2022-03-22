@@ -46,5 +46,5 @@ class Emprestimo(models.Model):
     avaliacao = models.CharField(max_length=1,choices=escolhas,default=1, blank = True, null = True)
 
     def __str__(self) -> str:
-        return f"{self.nome_emprestado} | {self.livro}"
+        return f"Usuário {self.nome_emprestado} | {self.livro}" if self.nome_emprestado != None else f"{self.nome_emprestado_anonimo} | {self.livro}"
 

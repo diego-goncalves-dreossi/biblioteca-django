@@ -26,7 +26,11 @@ def inicio(request):
         # Para os emprestimos
         e_usuarios = Usuario.objects.all()
         # Vai usar o livros = Livro.objects.filter(usuario = usuario)
-        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios})
+
+        # Livro disponíveis para emprestar
+        e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
+
+        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros})
     else:
         return redirect('/login/?status=2')
 
@@ -51,7 +55,10 @@ def ver_livro(request, id):
             e_usuarios = Usuario.objects.all()
             livros = Livro.objects.filter(usuario = usuario)
 
-            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros})
+            # Livro disponíveis para emprestar
+            e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
+
+            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -80,8 +87,10 @@ def editar_livro(request, id):
             e_usuarios = Usuario.objects.all()
             livros = Livro.objects.filter(usuario = usuario)
 
+            # Livro disponíveis para emprestar
+            e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
 
-            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros})
+            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -120,5 +129,33 @@ def cadastrar_categoria(request):
         return HttpResponse('Erro ao salvar categoria no bd')
 
 def cadastrar_emprestimo(request):
-    return HttpResponse('Teste cadastrar_emprestimo')
+    if request.method == 'POST':
+        nome_emprestado = request.POST.get('nome_emprestado')
+        nome_emprestado_anonimo = request.POST.get('nome_emprestado_anonimo')
+        livro_emprestado = request.POST.get('livro_emprestimo')
+        # Hora irá ser defina quando for enviado ao banco de dados
+
+        if nome_emprestado_anonimo:
+            emprestimo = Emprestimo(
+                nome_emprestado_anonimo = nome_emprestado_anonimo,
+                livro_id = livro_emprestado
+            )
+        else:
+            emprestimo = Emprestimo(
+                nome_emprestado_id = nome_emprestado,
+                livro_id = livro_emprestado
+            )
+
+    try:
+        emprestimo.save()
+
+        # Marca livro como emprestado no banco de dados
+        livro = Livro.objects.get(id=livro_emprestado)
+        livro.emprestado = True
+        livro.save()
+
+
+        return HttpResponse('Emprestimo realizado com sucesso')
+    except:
+        return HttpResponse('Erro no cadastrar_emprestimo')
     
