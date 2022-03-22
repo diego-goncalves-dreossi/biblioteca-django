@@ -1,9 +1,13 @@
 from ast import If
+from datetime import datetime
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+
+import livro
 from .models import Categoria, Emprestimo, Livro
 from usuarios.models import Usuario
 from .forms import CadastroLivro,CadastroCategoria
+from django.db.models import Q
 # Create your views here.
 
 def inicio(request):
@@ -33,11 +37,11 @@ def inicio(request):
         # Livros já emprestados
         d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
       
-        print(d_livros)
+        
 
         total_livros = livros.count()
 
-        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros,'total_livros':total_livros})
+        return render(request,'paginainicial.html',{'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros,'total_livros':total_livros,'livros_emprestados':d_livros})
     else:
         return redirect('/login/?status=2')
 
@@ -65,7 +69,14 @@ def ver_livro(request, id):
             # Livro disponíveis para emprestar
             e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
 
-            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros})
+            # Livros já emprestados
+            d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
+        
+            
+
+            total_livros = livros.count()
+
+            return render(request,'ver_livro.html',{'livro':livro,'emprestimos': emprestimos,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros,'total_livros':total_livros,'livros_emprestados':d_livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -97,7 +108,14 @@ def editar_livro(request, id):
             # Livro disponíveis para emprestar
             e_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = False)
 
-            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros})
+            # Livros já emprestados
+            d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
+        
+            
+
+            total_livros = livros.count()
+
+            return render(request,'editar_livro.html',{'livro':livro, 'categorias':categorias,'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'e_usuarios':e_usuarios,'livros':livros,'e_livros':e_livros,'total_livros':total_livros,'livros_emprestados':d_livros})
         else:
             return HttpResponse('Este livro não é seu')
     else:
@@ -160,8 +178,24 @@ def cadastrar_emprestimo(request):
         livro.emprestado = True
         livro.save()
 
-
+        #return redirect('/livro/inicio')
         return HttpResponse('Emprestimo realizado com sucesso')
     except:
         return HttpResponse('Erro no cadastrar_emprestimo')
 
+def devolver_livro(request):
+    # Atualizar livro
+    id = request.POST.get('id_livro_devolver') # do livro
+    livro_devolver = Livro.objects.get(id=id)
+    livro_devolver.emprestado = False
+    livro_devolver.save()
+
+    # Atualizar empréstimo
+    # Q é consultas no banco de dados
+    emprestimo_devolver = Emprestimo.objects.get(Q(livro = livro_devolver) & Q(data_devolucao = None) )
+    emprestimo_devolver.data_devolucao = datetime.now() 
+    emprestimo_devolver.save()
+
+    #return HttpResponse('Tudo certo')
+    return redirect('/livro/inicio')
+    #return HttpResponse("Livro devolvido")

@@ -113,9 +113,16 @@
           </div>
 
           <div style="display: none;" id="devolucao">
-            <select class="form-control" id="">
-              <option>Teste</option>
-            </select>
+            <form action="{% url 'livro:devolver_livro' %}" method="POST">{% csrf_token %}
+
+              <select class="form-control" name="id_livro_devolver">
+                {% for lvr in livros_emprestados  %}
+                  <option value="{{lvr.id}}">{{lvr.nome}}</option>
+                {% endfor %}
+              </select>
+              <br>
+              <input type="submit" class="btn btn-warning" value="Devolver" >
+            </form>
           </div>
 
         </div>
