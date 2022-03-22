@@ -178,8 +178,8 @@ def cadastrar_emprestimo(request):
         livro.emprestado = True
         livro.save()
 
-        #return redirect('/livro/inicio')
-        return HttpResponse('Emprestimo realizado com sucesso')
+        return redirect('/livro/inicio')
+        #return HttpResponse('Emprestimo realizado com sucesso')
     except:
         return HttpResponse('Erro no cadastrar_emprestimo')
 
@@ -196,6 +196,25 @@ def devolver_livro(request):
     emprestimo_devolver.data_devolucao = datetime.now() 
     emprestimo_devolver.save()
 
-    #return HttpResponse('Tudo certo')
     return redirect('/livro/inicio')
-    #return HttpResponse("Livro devolvido")
+
+def alterar_livro(request):
+    livro_id = request.POST.get('livro_id')
+    nome_livro =request.POST.get('nome_livro')
+    autor = request.POST.get('autor')
+    co_autor = request.POST.get('co_autor')
+    sinopse = request.POST.get('sinopse')
+    print(livro_id,nome_livro,autor,co_autor,sinopse)
+
+    livro = Livro.objects.get(id = livro_id)
+    
+    # Evita a falha de segurança de alguém poder mexer no sistema pelo inspecionar
+    if livro.usuario.id == request.session['usuario']:
+        livro.nome = nome_livro
+        livro.autor = autor
+        livro.co_autor = co_autor
+        livro.sinopse = sinopse
+        livro.save()
+        return redirect(f'/livro/livro_info/{livro_id}')
+    else:
+        return redirect('/sair')

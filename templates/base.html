@@ -26,7 +26,7 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-        <button type="button"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary dropdown-item" >Cadastrar</button>
+        <button type="button"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary dropdown-item" >Ações</button>
         <a href="{% url 'usuarios:sair' %}" class="btn btn-danger dropdown-item">Sair</a>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item" href="#">{{total_livros}} livros.</div>
@@ -53,7 +53,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Cadastrar Livro</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Cadastrar / Emprestar / Devolver</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
