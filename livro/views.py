@@ -224,3 +224,20 @@ def seus_emprestimos(request):
     usuario = Usuario.objects.get(id = request.session['usuario'])
     emprestimos = Emprestimo.objects.filter(nome_emprestado = usuario)
     return render(request,'seus_emprestimos.html', {'usuario_logado':request.session.get('usuario'),'emprestimos':emprestimos})
+
+    """
+    Para fazer as funcionalidades do menu serem executadas
+
+    {'livros':livros, 'usuario_logado':request.session.get('usuario'),'formulario':formulario,'form_categoria':fc,'status_categoria':status_categoria,'e_usuarios':e_usuarios,'e_livros':e_livros,'total_livros':total_livros,'livros_emprestados':d_livros}
+    """
+
+def processa_avaliacao(request):
+    id_emprestimo = request.POST.get('id_emprestimo')
+    opcoes = request.POST.get('opcoes')
+    id_livro = request.POST.get('id_livro')
+
+    emprestimo = Emprestimo.objects.get(id = id_emprestimo)
+    emprestimo.avaliacao = opcoes
+    emprestimo.save()
+    return HttpResponse('OK')
+    return redirect(f'/livro/livro_info/{id_livro}')
