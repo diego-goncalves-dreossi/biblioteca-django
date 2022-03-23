@@ -43,7 +43,7 @@ class Emprestimo(models.Model):
     data_emprestimo = models.DateTimeField(default=datetime.datetime.now())
     data_devolucao = models.DateTimeField(blank = True, null = True)
     livro = models.ForeignKey(Livro, on_delete=models.DO_NOTHING)
-    avaliacao = models.CharField(max_length=1,choices=escolhas,default=1, blank = True, null = True)
+    avaliacao = models.CharField(max_length=1,choices=escolhas, blank = True, null = True)
 
     def __str__(self) -> str:
         return f"Usuário {self.nome_emprestado} | {self.livro}" if self.nome_emprestado != None else f"{self.nome_emprestado_anonimo} | {self.livro}"
