@@ -34,8 +34,6 @@ def inicio(request):
         # Livros já emprestados
         d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
       
-        
-
         total_livros = livros.count()
 
         return render(request,'paginainicial.html',
@@ -83,8 +81,6 @@ def ver_livro(request, id):
             # Livros já emprestados
             d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
         
-            
-
             total_livros = livros.count()
 
             return render(request,'ver_livro.html',
@@ -136,8 +132,6 @@ def editar_livro(request, id):
             # Livros já emprestados
             d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
         
-            
-
             total_livros = livros.count()
 
             return render(request,'editar_livro.html',
@@ -161,8 +155,10 @@ def cadastrar_livro(request):
     # Evita que a url seja acessada manualmente
     if request.method == 'POST':
         # Cria formulário
-        formulario = CadastroLivro(request.POST)
-
+        formulario = CadastroLivro(request.POST, request.FILES)
+        # Imagens são passadas pelo request.FILES, não pelo POST
+        # request.FILES.get('img') # Arquivo de imagem mesmo 
+        # Arquivos tem vários métodos e atributos
         # Cadastra o livro no banco de dados
         if formulario.is_valid:
             formulario.save()
@@ -220,7 +216,6 @@ def cadastrar_emprestimo(request):
         livro.save()
 
         return redirect('/livro/inicio')
-        #return HttpResponse('Emprestimo realizado com sucesso')
     except:
         return HttpResponse('Erro no cadastrar_emprestimo')
 
@@ -289,11 +284,8 @@ def seus_emprestimos(request):
     # Livros já emprestados
     d_livros = Livro.objects.filter(usuario = usuario).filter(emprestado = True)
       
-        
-
     total_livros = livros.count()
     
-
     return render(request,'seus_emprestimos.html', 
     {
         'usuario_logado':request.session.get('usuario'),'emprestimos':emprestimos,
