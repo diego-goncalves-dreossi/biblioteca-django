@@ -15,6 +15,7 @@ class Categoria(models.Model):
 
 class Livro(models.Model):
     # Colunas da tabela
+    img = models.ImageField(upload_to = 'capa_livro',null=True,blank=True)
     nome = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
     co_autor = models.CharField(max_length=100,blank=True)
@@ -48,5 +49,4 @@ class Emprestimo(models.Model):
     def __str__(self) -> str:
         return f"Usuário {self.nome_emprestado} | {self.livro}" if self.nome_emprestado != None else f"{self.nome_emprestado_anonimo} | {self.livro}"
 
-class Avaliacao(models.Model):
-    pass
+

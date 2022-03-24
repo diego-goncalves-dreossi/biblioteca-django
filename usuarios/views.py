@@ -67,3 +67,6 @@ def valida_login(request):
 def sair(request):
     request.session.flush() # Limpa a session
     return redirect('/login/')
+
+def sitebiblioteca(request):
+    return render(request,'sitebiblioteca.html')

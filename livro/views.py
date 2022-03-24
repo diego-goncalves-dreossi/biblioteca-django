@@ -307,8 +307,6 @@ def seus_emprestimos(request):
         'livros_emprestados':d_livros
     })
 
-    
-
 def processa_avaliacao(request):
     # Captura informações da requisição e torna em váriaveis
     id_emprestimo = request.POST.get('id_emprestimo')

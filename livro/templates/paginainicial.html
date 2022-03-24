@@ -10,13 +10,14 @@
 
 <h1 style="text-align: center;">Livros cadastrados</h1>
 <br>
-<div class="container">
-    <div class="row">
+<div style="margin: auto;" class="container">
+    <div style="text-align: center;" class="row">
         
         {% for livro in livros %}
         <div class="col-md">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
+                    <img style="height: 200px; width: 150px; margin-bottom: 10px;" src="{{livro.img.url|default_if_none:'#'}}" alt="capa_livro"/>
                     <h5 class="card-title">{{livro.nome}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{livro.autor}}</h6>
                     
