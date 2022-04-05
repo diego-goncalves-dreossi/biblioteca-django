@@ -1,0 +1,1 @@
+Está pasta esta armazenando as telas da aplicação desse projeto.
